@@ -28,11 +28,11 @@ from .serializers import (
 
 
 
-class ProductCategoryView(APIView):
-  def get(self, request):
-    data = ProductCategory.objects.all()
-    serializer = ProductCategorySerializer(data, many=True)
-    return Response(serializer.data)
+# class ProductCategoryView(APIView):
+#   def get(self, request):
+#     data = ProductCategory.objects.all()
+#     serializer = ProductCategorySerializer(data, many=True)
+#     return Response(serializer.data)
 
 
 
@@ -40,11 +40,11 @@ class ProductCategoryView(APIView):
 ####### DATA #####################################################################
 
 
-class DataNetworkView(APIView):
-  def get(self, request):
-      networks = DataSettings.objects.values('network', 'network_id').distinct()
-      serializer = NetworkSerializer(networks, many=True)
-      return Response(serializer.data)
+# class DataNetworkView(APIView):
+#   def get(self, request):
+#       networks = DataSettings.objects.values('network', 'network_id').distinct()
+#       serializer = NetworkSerializer(networks, many=True)
+#       return Response(serializer.data)
 
 class DataPlansView(generics.ListAPIView):
   serializer_class = DataSerializer
@@ -65,11 +65,11 @@ class PlanTypeView(generics.ListAPIView):
 #######################################################################################
 ####### AIRTIME #####################################################################
 
-class AirtimeNetworkView(APIView):
-  def get(self, request):
-      networks = AirtimeSettings.objects.values('network', 'network_id').distinct()
-      serializer = NetworkSerializer(networks, many=True)
-      return Response(serializer.data)
+# class AirtimeNetworkView(APIView):
+#   def get(self, request):
+#       networks = AirtimeSettings.objects.values('network', 'network_id').distinct()
+#       serializer = NetworkSerializer(networks, many=True)
+#       return Response(serializer.data)
 
 class AirtimeTypeView(generics.ListAPIView):
   serializer_class = AirtimeTypeSerializer
@@ -81,11 +81,11 @@ class AirtimeTypeView(generics.ListAPIView):
 ########################################################################################
 ##########CABLE SUBSCRIPTION##############################################
 
-class CableCategoryView(APIView):
-  def get(self, request):
-    cable_category = CableSettings.objects.all()
-    serializer = CableCategorySerializer(cable_category, many=True)
-    return Response(serializer.data)
+# class CableCategoryView(APIView):
+#   def get(self, request):
+#     cable_category = CableSettings.objects.all()
+#     serializer = CableCategorySerializer(cable_category, many=True)
+#     return Response(serializer.data)
 
 class CablePlansView(generics.ListAPIView):
   serializer_class = CablePlansSerializer
@@ -109,3 +109,34 @@ class ElectricitySettingsView(APIView):
     settings = ElectricitySettings.objects.all()
     serializer = ElectricitySettingsSerializer(settings, many=True)
     return Response(serializer.data)
+
+
+class CombinedDataView(APIView):
+    def get(self, request):
+        # Fetch data for each category
+        product_data = ProductCategory.objects.all()
+        electricity = Electricity.objects.all()
+        data_networks = DataSettings.objects.values('network', 'network_id').distinct()
+        airtime_networks = AirtimeSettings.objects.values('network', 'network_id').distinct()
+        cable_categories = CableSettings.objects.all()
+        electricity_settings = ElectricitySettings.objects.all()
+
+
+        # Serialize the data
+        product_data_serialized = ProductCategorySerializer(product_data, many=True).data
+        data_networks_serialized = NetworkSerializer(data_networks, many=True).data
+        airtime_networks_serialized = NetworkSerializer(airtime_networks, many=True).data
+        cable_categories_serialized = CableCategorySerializer(cable_categories, many=True).data
+     
+
+
+
+        # Combine into a single response
+        combined_data = {
+            'productData': product_data_serialized,
+            'dataNetworks': data_networks_serialized,
+            'airtimeNetworks': airtime_networks_serialized,
+            'cableCategories': cable_categories_serialized,
+        }
+        
+        return Response(combined_data, status=status.HTTP_200_OK)
