@@ -3,8 +3,8 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-  email = models.EmailField(unique=True)
-  phone_number = models.CharField(max_length=11, unique=True) 
+  email = models.EmailField()
+  phone_number = models.BigIntegerField() 
   transaction_pin = models.CharField(max_length=4)
   is_premium = models.BooleanField(default=False)
   date_joined = models.DateTimeField(auto_now_add=True)
