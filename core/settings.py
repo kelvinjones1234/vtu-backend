@@ -137,15 +137,41 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = BASE_DIR/'assets'
 
 
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+#     'default': {
+#         'BACKEND': 'django.core.files.storage.FileSystemStorage',
+#         'LOCATION': os.path.join(BASE_DIR, 'media'),
+#     }
+# }
+
+AWS_ACCESS_KEY_ID = "AKIA6JDHOLEON4TZHUVS"
+AWS_SECRET_ACCESS_KEY = "xWeAjMzLCGw3AXUZXKauYAJRYjWVIOG6JRDhEuvR"
+AWS_STORAGE_BUCKET_NAME = "djangodemo"
+# AWS_S3_REGION_NAME = 'your-region'  # e.g., 'us-east-1'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+AWS_LOCATION = 'media'
+
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
     'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
-        'LOCATION': os.path.join(BASE_DIR, 'media'),
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+        'OPTIONS': {
+            'access_key': AWS_ACCESS_KEY_ID,
+            'secret_key': AWS_SECRET_ACCESS_KEY,
+            'bucket_name': AWS_STORAGE_BUCKET_NAME,
+            'location': AWS_LOCATION,
+        },
     }
 }
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 
 
 # Default primary key field type
