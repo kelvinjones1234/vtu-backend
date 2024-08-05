@@ -69,3 +69,8 @@ class ElectricitySettingsSerializer(serializers.ModelSerializer):
 
 
 
+# class Genericserializer(serializers.Serializer):
+#   product_cat = ProductCategorySerializer()
+#   data_network = NetworkSerializer()
+#   airtime_network = AirtimeNetworkView()
+#   cable_cat = CableCategoryView()
