@@ -21,7 +21,7 @@ urlpatterns = [
   path('authentication/register/', RegisterView.as_view(), name='register'),
 
   # transfer and notifications
-  path('wallet/<str:wallet_name__username>/', WalletDetailView.as_view(), name='wallet_detail'),
+  path('wallet/<str:wallet_name__username>/', WalletDetailView.as_view(), name='fund_wallet'),
   path('fund-wallet/<str:wallet_name__username>/', FundWalletView.as_view(), name='wallet_detail'),
   path('transfer/', TransferView.as_view(), name='transfer'),
   path('notifications/', NotificationListView.as_view(), name='notifications'),

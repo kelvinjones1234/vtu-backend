@@ -27,11 +27,9 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('username', 'email', 'phone_number')
     ordering = ('username',)
 
-
 class WalletAdmin(admin.ModelAdmin):
     model = Wallet
     list_display = ('wallet_name', 'balance', 'last_funded')
-
 
 class NotificationAdmin(admin.ModelAdmin):
     model = Notification
